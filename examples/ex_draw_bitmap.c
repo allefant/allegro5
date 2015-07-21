@@ -6,6 +6,11 @@
 
 #include "common.c"
 
+
+#ifdef __EMSCRIPTEN__
+   #include <emscripten.h>
+#endif
+
 #define FPS 60
 #define MAX_SPRITES 1024
 
@@ -229,8 +234,10 @@ static void redraw(void)
    
 }
 
+#ifndef __EMSCRIPTEN__
 int main(int argc, char **argv)
 {
+#endif
    ALLEGRO_TIMER *timer;
    ALLEGRO_EVENT_QUEUE *queue;
    ALLEGRO_MONITOR_INFO info;
@@ -238,6 +245,11 @@ int main(int argc, char **argv)
    bool done = false;
    bool need_redraw = true;
    bool background = false;
+
+#ifdef __EMSCRIPTEN__
+int main(int argc, char **argv)
+{
+#endif
    example.show_help = true;
    example.hold_bitmap_drawing = false;
 
@@ -259,7 +271,7 @@ int main(int argc, char **argv)
    
    al_get_monitor_info(0, &info);
 
-   #if defined ALLEGRO_CFG_OPENGLES
+   #if defined ALLEGRO_CFG_OPENGLES && !defined __EMSCRIPTEN__
    al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
    #endif
    al_set_new_display_option(ALLEGRO_SUPPORTED_ORIENTATIONS,
@@ -312,12 +324,29 @@ int main(int argc, char **argv)
    al_start_timer(timer);
 
    while (!done) {
+
+#ifdef __EMSCRIPTEN__
+      void single_frame(void);
+      emscripten_set_main_loop(single_frame, 0, true);
+   }
+   return 0;
+}
+
+void single_frame(void)
+{
+   {
+#endif
+
       float x, y;
       ALLEGRO_EVENT event;
       w = al_get_display_width(example.display);
       h = al_get_display_height(example.display);
 
+#ifdef __EMSCRIPTEN__
+      if (!background && need_redraw) {
+#else
       if (!background && need_redraw && al_is_event_queue_empty(queue)) {
+#endif
          double t = -al_get_time();
          add_time();
          al_clear_to_color(al_map_rgb_f(0, 0, 0));
@@ -328,7 +357,11 @@ int main(int argc, char **argv)
          need_redraw = false;
       }
 
+#ifdef __EMSCRIPTEN__
+      while (al_get_next_event(queue, &event)) {
+#else
       al_wait_for_event(queue, &event);
+#endif
       switch (event.type) {
          case ALLEGRO_EVENT_KEY_CHAR: /* includes repeats */
             if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
@@ -431,11 +464,16 @@ int main(int argc, char **argv)
             break;
          }
       }
+#ifdef __EMSCRIPTEN__
+   }
+   }
+#else
    }
 
    al_destroy_bitmap(example.bitmap);
 
    return 0;
+#endif
 }
 
 /* vim: set sts=3 sw=3 et: */

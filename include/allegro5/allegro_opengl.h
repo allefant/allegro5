@@ -58,7 +58,7 @@
 #define GL_GLEXT_PROTOTYPES
 #endif
 
-#elif defined ALLEGRO_ANDROID || defined ALLEGRO_RASPBERRYPI
+#elif defined ALLEGRO_ANDROID || defined ALLEGRO_RASPBERRYPI || defined __EMSCRIPTEN__
 
 #include <GLES/gl.h>
 #include <GLES/glext.h>
@@ -74,7 +74,7 @@
 
 #define GL_RGBA8 GL_RGBA8_OES
 
-#ifndef ALLEGRO_RASPBERRYPI
+#if !defined ALLEGRO_RASPBERRYPI && !defined __EMSCRIPTEN__
 #define GL_FRAMEBUFFER_BINDING_EXT GL_FRAMEBUFFER_BINDING_OES
 #define GL_FRAMEBUFFER_EXT GL_FRAMEBUFFER_OES
 #define glBlendEquation glBlendEquationOES

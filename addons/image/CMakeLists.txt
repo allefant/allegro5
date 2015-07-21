@@ -78,6 +78,14 @@ if(WANT_NATIVE_IMAGE_LOADER)
     endif(IPHONE)
 endif(WANT_NATIVE_IMAGE_LOADER)
 
+if(ALLEGRO_EMSCRIPTEN)
+    set(ALLEGRO_CFG_IIO_HAVE_PNG 1)
+    set(ALLEGRO_CFG_IIO_SUPPORT_PNG 1)
+    list(APPEND IMAGE_SOURCES png.c)
+    set(CMAKE_C_FLAGS "-s USE_ZLIB=1 -s USE_LIBPNG=1")
+endif()
+
+
 # Now look for third party libraries to handle the unsupported formats
 
 if(WANT_IMAGE_PNG AND NOT ALLEGRO_CFG_IIO_SUPPORT_PNG)

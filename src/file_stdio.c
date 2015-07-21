@@ -28,6 +28,16 @@
 #endif
 #endif
 
+#ifdef __EMSCRIPTEN__
+typedef int errno_t;
+
+static errno_t strerror_s(char *buffer, size_t numberOfElements,
+   int errnum )
+{
+   return 0;
+}
+#endif
+
 #include <stdio.h>
 
 #include "allegro5/internal/aintern.h"

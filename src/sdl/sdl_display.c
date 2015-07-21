@@ -87,6 +87,11 @@ static ALLEGRO_DISPLAY *sdl_create_display_locked(int w, int h)
    d->h = h;
    d->flags = al_get_new_display_flags();
    d->flags |= ALLEGRO_OPENGL;
+
+   #ifdef __EMSCRIPTEN__
+   d->flags |= ALLEGRO_PROGRAMMABLE_PIPELINE;
+   #endif
+
    int flags = SDL_WINDOW_OPENGL;
    if (d->flags & ALLEGRO_FULLSCREEN)
       flags |= SDL_WINDOW_FULLSCREEN;

@@ -34,7 +34,6 @@
 
 
 /* forward declarations */
-static double timer_thread_handle_tick(double interval);
 static void timer_handle_tick(ALLEGRO_TIMER *timer);
 
 
@@ -109,7 +108,7 @@ static void timer_thread_proc(_AL_THREAD *self, void *unused)
          old_time = new_time;
 
          /* Handle a tick.  */
-         interval = timer_thread_handle_tick(interval);
+         interval = _al_timer_thread_handle_tick(interval);
       }
       _al_mutex_unlock(&timers_mutex);
    }
@@ -124,7 +123,7 @@ static void timer_thread_proc(_AL_THREAD *self, void *unused)
  *  returns the duration that the timer thread should try to sleep
  *  next time.
  */
-static double timer_thread_handle_tick(double interval)
+double _al_timer_thread_handle_tick(double interval)
 {
    double new_delay = 0.032768;
    unsigned int i;

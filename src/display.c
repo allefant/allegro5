@@ -104,7 +104,9 @@ ALLEGRO_DISPLAY *al_create_display(int w, int h)
          al_destroy_display(display);
          return NULL;
       }
+      #ifdef __EMSCRIPTEN__
       al_use_shader(display->default_shader);
+      #endif
    }
 
    /* Clear the screen */

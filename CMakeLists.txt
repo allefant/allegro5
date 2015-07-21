@@ -34,6 +34,7 @@ if(WANT_ANDROID)
     set(ANDROID_TARGET "android-12" CACHE STRING "What Android target to compile for.")
 endif(WANT_ANDROID)
 option(ALLEGRO_SDL "Build using the SDL backend (experimental)" OFF)
+option(ALLEGRO_EMSCRIPTEN "Build using SDL-emscripten (experimental)" OFF)
 option(WANT_STATIC_RUNTIME "Whether or not to link the C and C++ runtimes statically (currently only implemented for MSVC)" OFF)
 
 # Set the project name.
@@ -435,13 +436,22 @@ include(FindPkgConfig)
 
 include(TestBigEndian)
 
-if(NOT IPHONE)
+if((NOT IPHONE) AND (NOT ALLEGRO_EMSCRIPTEN))
     test_big_endian(ALLEGRO_BIG_ENDIAN)
-endif(NOT IPHONE)
+endif()
 
 if(NOT ALLEGRO_BIG_ENDIAN)
     set(ALLEGRO_LITTLE_ENDIAN 1)
 endif(NOT ALLEGRO_BIG_ENDIAN)
+
+if(ALLEGRO_EMSCRIPTEN)
+    set(SUPPORT_OPENGL 1)
+    set(ALLEGRO_CFG_OPENGL 1)
+    set(ALLEGRO_CFG_OPENGLES 1)
+    set(ALLEGRO_CFG_OPENGLES2 1)
+    set(ALLEGRO_CFG_OPENGL_PROGRAMMABLE_PIPELINE 1)
+    set(CMAKE_EXECUTABLE_SUFFIX ".bc")
+endif()
 
 check_include_files(dirent.h ALLEGRO_HAVE_DIRENT_H)
 check_include_files(inttypes.h ALLEGRO_HAVE_INTTYPES_H)
