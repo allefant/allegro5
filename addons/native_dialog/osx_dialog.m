@@ -714,7 +714,7 @@ static ALLEGTargetManager* _sharedmanager = nil;
 {
     NSUInteger index = [self indexForWindow:window];
     if (menu) {
-        NSDictionary* newentry = @{@"menu":menu, @"window":window};
+        NSDictionary* newentry = [NSDictionary dictionaryWithObjectsAndKeys:@"menu", menu, @"window", window, nil];
         if (index == NSNotFound) {
             [self->_items addObject: newentry];
         }
