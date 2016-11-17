@@ -98,6 +98,11 @@ static uint32_t parse_opengl_version(const char *s)
    int n;
    uint32_t ver;
 
+   /* e.g. "OpenGL ES 1.0.1" */
+   while (*p && !isdigit(*p)) {
+      p++;
+   }
+
    /* e.g. "4.0.0 Vendor blah blah" */
    for (n = 0; n < 4; n++) {
       char *end;

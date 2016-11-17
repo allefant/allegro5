@@ -29,6 +29,8 @@
 #include "allegro5/allegro_opengl.h"
 #include "allegro5/internal/aintern_opengl.h"
 
+ALLEGRO_DEBUG_CHANNEL("primitives")
+
 static void convert_storage(ALLEGRO_PRIM_STORAGE storage, GLenum* type, int* ncoord, bool* normalized)
 {
    switch(storage) {

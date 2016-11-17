@@ -47,6 +47,7 @@ class AllegroEGL
    private HashMap<Integer, Integer> attribMap;
    private EGLConfig[] matchingConfigs;
    private EGLConfig chosenConfig;
+   private int[] egl_version = { 0, 0 };
 
    boolean egl_Init()
    {
@@ -55,7 +56,6 @@ class AllegroEGL
 
       EGLDisplay dpy = egl.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
 
-      int[] egl_version = { 0, 0 };
       if (!egl.eglInitialize(dpy, egl_version)) {
          Log.d(TAG, "egl_Init fail");
          return false;
@@ -63,7 +63,7 @@ class AllegroEGL
 
       egl_Display = dpy;
 
-      Log.d(TAG, "egl_Init end");
+      Log.d(TAG, "egl_Init OpenGL ES " + egl_version[0] + "." + egl_version[1]);
       return true;
    }
 
@@ -213,12 +213,9 @@ class AllegroEGL
          return 0;
       }
 
-      Log.d(TAG, "EGL context created");
+      Log.d(TAG, "EGL context (OpenGL ES " + version + ") created");
 
       egl_Context = ctx;
-
-      Log.d(TAG, "egl_createContext end");
-
       return 1;
    }
 
